@@ -8,76 +8,62 @@ PLACEMENTS = {
     "2,2": 108,
     "2,3": 114,
     "3,1": 181,
-    "3,1": 187,
+    "3,2": 187,
     "3,3": 193,
 }
 
 
-class Tic_Tac_toe:
-    def __init__(self) -> None:
-        print("Start Game!\n")
-        self.board = self.create_board()
-        self.player1, self.player2 = self.create_player()
-        print(self.player1, self.player2)
-
-    def create_board(self) -> str:
-        a = " ___" * 3
-        b = "     ".join(" || ")
-        board = "\n".join(
-            (
-                b,
-                b,
-                b,
-                a,
-                b,
-                b,
-                b,
-                a,
-                b,
-                b,
-                b,
-            )
+def create_board() -> str:
+    a = " _____" * 3
+    b = "     ".join(" || ")
+    board = "\n".join(
+        (
+            b,
+            b,
+            b,
+            a,
+            b,
+            b,
+            b,
+            a,
+            b,
+            b,
+            b,
         )
-        print(board)
-        return board
+    )
+    print(board)
+    return board
 
-    def create_player(self):
-        player_num = [1, 2]
-        irlPlayer = random.choice(player_num)
-        player_num.remove(irlPlayer)
-        computer = player_num[0]
-        print(f"You are player No {irlPlayer}. And computer is player No {computer}")
-        while True:
-            playerMark = input("Choose your marker (O, X): ").upper()
-            if playerMark in "XO":
-                if playerMark == "X":
-                    computerMark = "O"
-                else:
-                    computerMark = "X"
-                break
-            else:
-                print("Please enter a valid marker.")
-        print("Computer plays as: ", computerMark)
-        players = [
-            {"playerName": irlPlayer, "mark": playerMark},
-            {"playerName": computer, "mark": computerMark},
-        ]
-        return players[0], players[1]
 
-    def make_move(self):
-        self.board
-        choice = ""
-        boardlist = list(board)
+def make_move(board):
+    choice = ""
+    temp = 0
+    boardlist = list(board)
+    while True:
         row = input("\nPick a row:\t")
         column = input("Pick a column:\t")
+        if row and column:
+            if row not in "123" or column not in "123":
+                print("Please enter valid numbers between 1-3 for row and column.")
+                continue
+            else:
+                break
         choice = ",".join((row, column))
         temp = PLACEMENTS.get(choice)
-        boardlist[temp] = "X"
-        board = "".join(boardlist)
-        print(board)
+        if boardlist[temp] != " ":
+            print("Place already occupied, please pick again")
+        else:
+            break
+    boardlist[temp] = "X"
+    board = "".join(boardlist)
+    print(board)
 
 
-def is_winner(self) -> bool:
+def full_board(boardlist) -> bool:
+    return all(boardlist[place] != " " for place in PLACEMENTS.values())
+
+
+def is_winner(board) -> bool:
     sequences = [
         [23, 29, 35],
         [102, 108, 114],
@@ -88,6 +74,17 @@ def is_winner(self) -> bool:
         [23, 108, 193],
         [35, 108, 181],
     ]
+    for seq in sequences:
+        if board[seq[0]] == board[seq[1]] == board[seq[2]] != " ":
+            return True
+    return False
 
 
-game = Tic_Tac_toe()
+def start_game():
+    board = create_board()
+    for i in range(10):
+        board = make_move(board)
+        # print(is_winner(board))
+
+
+start_game()
